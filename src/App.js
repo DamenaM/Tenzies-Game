@@ -6,17 +6,22 @@ export default function App() {
 
     const [dice, setDice] = React.useState(allNewDice())
     
+    function generateNewDie() {
+        return {
+            value: Math.ceil(Math.random() * 6),
+            isHeld: false,
+            id: nanoid()
+        }
+    }
+    
     function allNewDice() {
         const newDice = []
         for (let i = 0; i < 10; i++) {
-            newDice.push({
-                value: Math.ceil(Math.random() * 6),
-                isHeld: false,
-                id: nanoid()
-            })
+            newDice.push(generateNewDie())
         }
         return newDice
     }
+    
     
 /**
  * Challenge: Update the `rollDice` function to not just roll
@@ -28,7 +33,11 @@ export default function App() {
  * `id: nanoid()` so any new dice have an `id` as well.
  */
     function rollDice() {
-        setDice(allNewDice())
+        setDice(oldDice => oldDice.map(die => {
+            return die.isHeld ? 
+                die :
+                generateNewDie()
+        }))
     }
     
     function holdDice(id) {
@@ -50,6 +59,7 @@ export default function App() {
     
     return (
         <main>
+            
             <div className="dice-container">
                 {diceElements}
             </div>
